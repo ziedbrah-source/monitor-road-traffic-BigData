@@ -5,12 +5,12 @@ import _ from 'lodash';
 let currentFictiveTimeStamp = Date.now();
 
 function generateRandomDouble(lowerBound: number, upperBound: number): number {
-    return Math.random() * (upperBound - lowerBound + 1);
+    return Math.random() * (upperBound - lowerBound) + lowerBound;
 }
 
 function generateRandomNumber(lowerBound: number, upperBound: number, step: number = 1): number {
     const random: number = Math.floor(generateRandomDouble(lowerBound, upperBound));
-    return random + lowerBound - random % step;
+    return random - random % step;
 }
 
 function generateSessionId(): string {
@@ -85,7 +85,7 @@ function moveLocationData(locationsData: LocationData): LocationData {
     locationDataToMove.location.lng += generateRandomDouble(-0.001, 0.001);
     locationDataToMove.accuracy += generateRandomNumber(-20, 20, 5);
     locationDataToMove.accuracy = Math.max(Math.min(locationDataToMove.accuracy, 200), 20);
-    return locationsData;
+    return locationDataToMove;
 };
 
 let data: LocationData = generateRandomLocationData();

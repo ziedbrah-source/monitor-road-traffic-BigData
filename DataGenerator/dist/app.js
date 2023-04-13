@@ -8,11 +8,11 @@ const LocationData_1 = require("./LocationData");
 const lodash_1 = __importDefault(require("lodash"));
 let currentFictiveTimeStamp = Date.now();
 function generateRandomDouble(lowerBound, upperBound) {
-    return Math.random() * (upperBound - lowerBound + 1);
+    return Math.random() * (upperBound - lowerBound) + lowerBound;
 }
 function generateRandomNumber(lowerBound, upperBound, step = 1) {
     const random = Math.floor(generateRandomDouble(lowerBound, upperBound));
-    return random + lowerBound - random % step;
+    return random - random % step;
 }
 function generateSessionId() {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -77,7 +77,7 @@ function moveLocationData(locationsData) {
     locationDataToMove.location.lng += generateRandomDouble(-0.001, 0.001);
     locationDataToMove.accuracy += generateRandomNumber(-20, 20, 5);
     locationDataToMove.accuracy = Math.max(Math.min(locationDataToMove.accuracy, 200), 20);
-    return locationsData;
+    return locationDataToMove;
 }
 ;
 let data = generateRandomLocationData();
