@@ -1,8 +1,11 @@
 import fs from 'fs';
 import { LocationData } from './LocationData';
-import _ from 'lodash';
+import _ from 'lodash'
+import {KafkaClient} from "./KafkaClient"
+
 
 let currentFictiveTimeStamp = Date.now();
+
 
 function generateRandomDouble(lowerBound: number, upperBound: number): number {
     return Math.random() * (upperBound - lowerBound) + lowerBound;
@@ -21,6 +24,7 @@ function generateSessionId(): string {
     }
     return result;
 }
+KafkaClient();
 
 function generateRandomMacAddress(): string {
     const hexChars: string = '0123456789ABCDEF';

@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const LocationData_1 = require("./LocationData");
 const lodash_1 = __importDefault(require("lodash"));
+const KafkaClient_1 = require("./KafkaClient");
 let currentFictiveTimeStamp = Date.now();
 function generateRandomDouble(lowerBound, upperBound) {
     return Math.random() * (upperBound - lowerBound) + lowerBound;
@@ -22,6 +23,7 @@ function generateSessionId() {
     }
     return result;
 }
+(0, KafkaClient_1.KafkaClient)();
 function generateRandomMacAddress() {
     const hexChars = '0123456789ABCDEF';
     let macAddress = '';
