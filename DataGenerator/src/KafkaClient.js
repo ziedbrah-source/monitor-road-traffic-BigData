@@ -13,7 +13,7 @@ export async function KafkaClient() {
       await producer.send({
         topic: 'sensorsData',
         messages: [
-          { value: 'Hello KafkaJS user!' },
+          { key:"1",value: 'Hello KafkaJS user!' },
         ],
       })
       await producer.disconnect()
