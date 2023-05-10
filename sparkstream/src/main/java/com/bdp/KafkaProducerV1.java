@@ -37,9 +37,9 @@ public class KafkaProducerV1 {
                 <String, String>(props);
     }
 
-    public void send(String id,String event,String value){
+    public void send(String value){
         producer.send(new ProducerRecord<>(topicName,
-                event, id +" "+value));
+                value));
     }
 
 

@@ -43,7 +43,7 @@ public class SensorsProcess {
                     System.out.println(temp);
                     doc.append("source", "vehicules");
                     dbCollection.insertOne(doc);
-                    producerV1.send(doc.getString("id"),doc.getString("event"),doc.getString("msg"));
+                    producerV1.send(temp);
 
                 }
 

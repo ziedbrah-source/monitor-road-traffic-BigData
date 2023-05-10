@@ -23,7 +23,6 @@ function generateSessionId() {
     }
     return result;
 }
-(0, KafkaClient_1.KafkaClient)();
 function generateRandomMacAddress() {
     const hexChars = '0123456789ABCDEF';
     let macAddress = '';
@@ -61,24 +60,29 @@ function generateRandomLocationData() {
     const data = new LocationData_1.LocationData();
     currentFictiveTimeStamp += generateRandomNumber(1, 1000);
     const coordinates = generateRandomCoordinates(0, 10, 0, 10);
-    data.location = { lat: coordinates.lat, lng: coordinates.lng };
-    data.accuracy = generateRandomNumber(10, 140, 10);
-    data.macAddress = generateRandomMacAddress();
-    data.sessionId = generateSessionId();
-    data.session_start_timestamp = currentFictiveTimeStamp;
-    data.timestamp = currentFictiveTimeStamp;
+    data.lat = coordinates.lat.toString();
+    data.lng = coordinates.lng.toString();
+    data.macAddress = generateRandomMacAddress().toString();
+    data.sessionId = generateSessionId().toString();
+    data.session_start_timestamp = currentFictiveTimeStamp.toString();
+    data.timestamp = currentFictiveTimeStamp.toString();
     data.devicebrand = getRandomDeviceBrand();
-    data.speed = `${generateRandomNumber(0, 160)} km/h`;
+    var number = generateRandomNumber(0, 160);
+    // console.log(number);
+    data.speed = `${number} km/h`;
+    data.alert = number > 100 ? "true" : "false";
     return data;
 }
 function moveLocationData(locationsData) {
     const locationDataToMove = lodash_1.default.cloneDeep(locationsData);
     currentFictiveTimeStamp += generateRandomNumber(1, 1000);
-    locationDataToMove.timestamp = currentFictiveTimeStamp;
-    locationDataToMove.location.lat += generateRandomDouble(-0.001, 0.001);
-    locationDataToMove.location.lng += generateRandomDouble(-0.001, 0.001);
-    locationDataToMove.accuracy += generateRandomNumber(-20, 20, 5);
-    locationDataToMove.accuracy = Math.max(Math.min(locationDataToMove.accuracy, 200), 20);
+    locationDataToMove.timestamp = currentFictiveTimeStamp.toString();
+    locationDataToMove.lat = (+locationDataToMove.lat + generateRandomDouble(-0.001, 0.001)).toString();
+    locationDataToMove.lng = (+locationDataToMove.lng + generateRandomDouble(-0.001, 0.001)).toString();
+    const arr = locationDataToMove.speed.split(" ");
+    var speed = generateRandomNumber(Math.max(0, +arr[0] - 40), Math.min(+arr[0] + 40, 160));
+    locationDataToMove.alert = +arr[0] > 100 ? "true" : "false";
+    locationDataToMove.speed = `${speed} km/h`;
     return locationDataToMove;
 }
 ;
@@ -100,7 +104,7 @@ for (let i = 0; i < numberOfUpdates; i++) {
 const fileName = 'data.json';
 let dataString = '';
 for (let i = 0; i < locationsDataQueue.length; i++) {
-    dataString += JSON.stringify(locationsDataQueue[i]) + '\n';
+    (0, KafkaClient_1.KafkaClient)(JSON.stringify(locationsDataQueue[i]));
 }
 console.log(`Saved ${locationsDataQueue.length} LocationData related to ${numberOfSession} unique session inside ${fileName}`);
 fs_1.default.writeFile(fileName, dataString, () => { });

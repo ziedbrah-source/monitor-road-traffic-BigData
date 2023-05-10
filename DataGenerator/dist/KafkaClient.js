@@ -11,21 +11,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KafkaClient = void 0;
 const { Kafka } = require('kafkajs');
-function KafkaClient() {
+function KafkaClient(msg) {
     return __awaiter(this, void 0, void 0, function* () {
         const kafka = new Kafka({
             brokers: ['localhost:9092'],
         });
         const producer = kafka.producer();
         yield producer.connect();
-        // while(true){
         yield producer.send({
             topic: 'sensorsData',
             messages: [
-                { value: '{"msg":"Hello KafkaJS user you!","id":"1","event":"INFO"}' },
+                { value: msg },
             ],
         });
-        // }
         yield producer.disconnect();
     });
 }
