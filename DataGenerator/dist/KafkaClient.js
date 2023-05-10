@@ -18,14 +18,14 @@ function KafkaClient() {
         });
         const producer = kafka.producer();
         yield producer.connect();
-        while (true) {
-            yield producer.send({
-                topic: 'sensorsData',
-                messages: [
-                    { value: 'msg:"Hello KafkaJS user you!"' },
-                ],
-            });
-        }
+        // while(true){
+        yield producer.send({
+            topic: 'sensorsData',
+            messages: [
+                { value: '{"msg":"Hello KafkaJS user you!","id":"1","event":"INFO"}' },
+            ],
+        });
+        // }
         yield producer.disconnect();
     });
 }

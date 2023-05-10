@@ -35,12 +35,13 @@ public class Consumer {
             ConsumerRecords<String, String> records = consumer.poll(100);
             for (ConsumerRecord<String, String> record : records) {
                 try {
+                    i++;
 
                     System.out.println(record.value());
 
                     HDFSClient writer = new HDFSClient(new URI("hdfs://localhost:9000/"), "/user/root/sensors/sensorsData"+i+".txt");
-                    writer.write(record.value() + " "+record.timestamp()+ " 777, ");
-                    i++;
+                    writer.write(record.value() );
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

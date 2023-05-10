@@ -10,14 +10,14 @@ export async function KafkaClient() {
       const producer = kafka.producer()
       
       await producer.connect()
-      while(true){
+     // while(true){
         await producer.send({
           topic: 'sensorsData',
           messages: [
-            {value: 'msg:"Hello KafkaJS user you!"' },
+            {value: '{"msg":"Hello KafkaJS user you!","id":"1","event":"INFO"}' },
           ],
         })
-      }
+     // }
       await producer.disconnect()
  }
 
