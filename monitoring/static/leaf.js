@@ -16,7 +16,7 @@ mapMarkers1 = [];
 mapMarkers2 = [];
 mapMarkers3 = [];
 
-var source = new EventSource('/topic/cleanData'); //ENTER YOUR TOPICNAME HERE
+var source = new EventSource('/topic/cleanData'); 
 source.addEventListener('message', function(e){
 
   console.log('Message');
