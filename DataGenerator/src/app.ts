@@ -124,6 +124,7 @@ const fileName: string = 'data.json';
 let dataString: string = '';
 for (let i = 0; i < locationsDataQueue.length; i++) {
     KafkaClient(JSON.stringify(locationsDataQueue[i]));
+    dataString+=JSON.stringify(locationsDataQueue[i])+"\n";
 }
 
 console.log(`Saved ${locationsDataQueue.length} LocationData related to ${numberOfSession} unique session inside ${fileName}`);
