@@ -14,7 +14,7 @@ export async function KafkaClient(msg) {
       const producer = kafka.producer()
      
 
-      await sleep(3000);
+      await sleep(30000);
         
           //your task after delay.
           await producer.connect()

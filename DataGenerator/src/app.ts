@@ -143,7 +143,7 @@ function moveLocationData(locationsData: LocationData): LocationData {
 let data: LocationData = generateRandomLocationData();
 
 
-const numberOfSession: number = 10; // how many vehicule will connect to the server at first
+const numberOfSession: number = 1; // how many vehicule will connect to the server at first
 const numberOfUpdates: number = 100; // the number of ping / updates that will be provided by all vehicules
 
 let locationsDataQueue: Array<LocationData> = new Array<LocationData>();

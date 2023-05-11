@@ -87,7 +87,7 @@ function moveLocationData(locationsData) {
 }
 ;
 let data = generateRandomLocationData();
-const numberOfSession = 10; // how many vehicule will connect to the server at first
+const numberOfSession = 1; // how many vehicule will connect to the server at first
 const numberOfUpdates = 100; // the number of ping / updates that will be provided by all vehicules
 let locationsDataQueue = new Array();
 let activeLocationsData = new Array();
@@ -103,7 +103,7 @@ for (let i = 0; i < numberOfUpdates; i++) {
 }
 const fileName = 'data.json';
 let dataString = '';
-for (let i = 0; i < 2; i++) {
+for (let i = 0; i < locationsDataQueue.length; i++) {
     (0, KafkaClient_1.KafkaClient)(JSON.stringify(locationsDataQueue[i]));
     dataString += JSON.stringify(locationsDataQueue[i]) + "\n";
 }
