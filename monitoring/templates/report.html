@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- LEAFLET -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+        integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+        crossorigin="" />
+
+    </style>
+
+</head>
+
+
+<body>
+    <h1>Batch View</h1>
+
+    <h2>User By Mobile device type</h2>
+    <style>
+        .container {
+            width: 40%;
+            margin: 0 auto;
+        }
+
+        canvas {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+    <div class="container">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const ctx = document.getElementById('myChart');
+        let marque = ["OnePlus",
+            "Oppo",
+            "Samsung",
+            "Apple",
+            "Nokia",
+            "Sony",
+            "Huawei",
+            "Xiaomi",
+            "LG",
+            "Motorola"];
+        let stats = [345,
+            242,
+            353,
+            514,
+            1048,
+            207,
+            98,
+            192,
+            153,
+            276];
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: marque,
+                datasets: [{
+                    label: '# of devices',
+                    data: stats,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+<script>
+    const data = {
+        labels: [
+            'Red',
+            'Blue',
+            'Yellow'
+        ],
+        datasets: [{
+            label: 'My First Dataset',
+            data: [300, 50, 100],
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 205, 86)'
+            ],
+            hoverOffset: 4
+        }]
+    };
+
+    const config = {
+        type: 'pie',
+        data: data,
+    };
+</script>
+
+</html>

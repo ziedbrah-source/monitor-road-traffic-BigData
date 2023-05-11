@@ -12,7 +12,7 @@ def get_kafka_client():
     return KafkaClient(hosts='127.0.0.1:9092')
 
 app = Flask(__name__)
-client = MongoClient('mongodb+srv://user:user@cluster0.dge37.mongodb.net/')
+client = MongoClient('mongodb://localhost:27017',username='bdp', password='password')
 #client = MongoClient('mongodb://7.tcp.eu.ngrok.io:18242',username='bdp', password='password')
 
 #db = client.flask_db
@@ -40,21 +40,24 @@ def stats(time):
          #print(document)
          if(int(document["timestamp"])>int(start_date.timestamp() * 1000)):
             print(document)
-            alerts.append(document)
+            alerts.append(document)    
 
     #average speed
-    total_speed = 0         
+    total_speed = 0       
+    counter=0;  
     for document in all_todos:
         if(int(document["timestamp"])>int(start_date.timestamp() * 1000)):
              print(document)
-        speed = document["speed"]
-        print(speed)
-        speed_value = speed.replace(" km/h", "")
-        #print(speed)
-        total_speed += int(speed_value)
-    average = 0 ;    
-    if(len(alerts) != 0):
-        average = total_speed/(len(alerts))
+             speed = document["speed"]
+             print(speed)
+             speed_value = speed.replace(" km/h", "")
+             counter+=1
+            #print(speed)
+             total_speed += int(speed_value)
+        
+    average = 0    
+    if(counter != 0):
+        average = total_speed/counter
 
     return render_template('index2.html', todos=alerts , time=time , average = average ,nbr = len(alerts) )
 
@@ -64,7 +67,7 @@ def index():
 
 @app.route('/report')
 def serve_text():
-    return send_from_directory('static', 'batchData.txt', mimetype='text/plain')
+    return (render_template('report.html'))
 
 #Consumer API
 @app.route('/topic/<topicname>')

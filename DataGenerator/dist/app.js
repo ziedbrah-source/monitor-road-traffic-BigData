@@ -132,8 +132,8 @@ function moveLocationData(locationsData) {
 }
 ;
 let data = generateRandomLocationData();
-const numberOfSession = 1; // how many vehicule will connect to the server at first
-const numberOfUpdates = 1000; // the number of ping / updates that will be provided by all vehicules
+const numberOfSession = 20; // how many vehicule will connect to the server at first
+const numberOfUpdates = 10000; // the number of ping / updates that will be provided by all vehicules
 let locationsDataQueue = new Array();
 let activeLocationsData = new Array();
 for (let i = 0; i < numberOfSession; i++) {
@@ -154,7 +154,7 @@ let dataString = '';
 function sleep() {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("Before sleep");
-        yield new Promise(resolve => setTimeout(resolve, 100));
+        yield new Promise(resolve => setTimeout(resolve, 300));
     });
 }
 function sendData() {
