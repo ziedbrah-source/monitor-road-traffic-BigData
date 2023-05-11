@@ -19,6 +19,7 @@ services:
       KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "sensorsData:1:1,cleanData:1:1"
+      KAFKA_DELETE_TOPIC_ENABLE: "true"   
   namenode:
     image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
     container_name: namenode

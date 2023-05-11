@@ -3,10 +3,8 @@ const { Kafka } = require('kafkajs')
 
 
 export async function KafkaClient(msg) {
-  
-  function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
+
+
    const kafka = new Kafka({
         brokers: ['localhost:9092'],
       })
@@ -14,7 +12,7 @@ export async function KafkaClient(msg) {
       const producer = kafka.producer()
      
 
-      await sleep(30000);
+    
         
           //your task after delay.
           await producer.connect()

@@ -88,8 +88,8 @@ function generateRandomLocationData(): LocationData {
     currentFictiveTimeStamp += generateRandomNumber(1, 1000);
 
     const currCoordinates = getRandomItem(allLocations);
-    data.lat = currCoordinates.coord[0].toString();
-    data.lng = currCoordinates.coord[1].toString();
+    data.lng = currCoordinates.coord[0].toString();
+    data.lat = currCoordinates.coord[1].toString();
     data.macAddress = generateRandomMacAddress().toString();
     data.sessionId = generateSessionId().toString();
     data.session_start_timestamp = currentFictiveTimeStamp.toString();
@@ -106,6 +106,7 @@ function generateRandomLocationData(): LocationData {
 function findFirstMissing(allKeys: string[], takenKeys: Set<string>) {
     for (const element of allKeys) {
         if (!takenKeys.has(element)) {
+            takenKeys.add(element)
             return element;
         }
     }
@@ -121,17 +122,19 @@ function moveLocationData(locationsData: LocationData): LocationData {
 
     let newCordKey = findFirstMissing(currentnode.neighbours, visitedLocationByMacAdress[data.macAddress]);
 
-    if (newCordKey === null) {
+    visitedLocationByMacAdress[locationsData.macAddress].add(newCordKey);
+    currentNodeIdByMacAdress[locationsData.macAddress] = newCordKey;
+    if (newCordKey === null || currentnode === null) {
+        console.log("w7ell");
         locationDataToMove.alert = "false";
         locationDataToMove.speed = "0 km/h";
-        return locationDataToMove;
+        return null;
     }
-
+    currentNodeIdByMacAdress[locationsData.macAddress] = newCordKey;
     let newCord = locationGraph[newCordKey];
-    visitedLocationByMacAdress[locationsData.macAddress].add(newCordKey);
 
-    locationDataToMove.lat = newCord.coord[0].toString();
-    locationDataToMove.lng = newCord.coord[1].toString();
+    locationDataToMove.lng = newCord.coord[0].toString();
+    locationDataToMove.lat = newCord.coord[1].toString();
     const arr = locationDataToMove.speed.split(" ");
     var speed=generateRandomNumber(Math.max(0,+arr[0]-40), Math.min(+arr[0]+40,160));
     locationDataToMove.alert= +arr[0]>100?"true":"false";
@@ -143,8 +146,8 @@ function moveLocationData(locationsData: LocationData): LocationData {
 let data: LocationData = generateRandomLocationData();
 
 
-const numberOfSession: number = 1; // how many vehicule will connect to the server at first
-const numberOfUpdates: number = 100; // the number of ping / updates that will be provided by all vehicules
+const numberOfSession: number = 20; // how many vehicule will connect to the server at first
+const numberOfUpdates: number = 10000; // the number of ping / updates that will be provided by all vehicules
 
 let locationsDataQueue: Array<LocationData> = new Array<LocationData>();
 let activeLocationsData: Array<LocationData> = new Array<LocationData>();
@@ -159,6 +162,9 @@ for (let i = 0; i < numberOfSession; i++) {
 for (let i = 0; i < numberOfUpdates; i++) {
     const chosenLocationDataId: number = generateRandomNumber(0, activeLocationsData.length - 1);
     activeLocationsData[chosenLocationDataId] = moveLocationData(activeLocationsData[chosenLocationDataId]);
+    if (activeLocationsData[chosenLocationDataId] == null) {
+        activeLocationsData[chosenLocationDataId] = generateRandomLocationData();
+    }
     locationsDataQueue.push(activeLocationsData[chosenLocationDataId]);
 }
 
@@ -166,10 +172,22 @@ for (let i = 0; i < numberOfUpdates; i++) {
 const fileName: string = 'data.json';
 
 let dataString: string = '';
-for (let i = 0; i < locationsDataQueue.length; i++) {
-    KafkaClient(JSON.stringify(locationsDataQueue[i]));
-    dataString+=JSON.stringify(locationsDataQueue[i])+"\n";
+async function sleep(): Promise<any> {
+    console.log("Before sleep");
+    await new Promise(resolve => setTimeout(resolve, 300));
 }
+async function sendData(): Promise<any>{
+    for (let i = 0; i < locationsDataQueue.length; i++) {
+        await sleep();
+        KafkaClient(JSON.stringify(locationsDataQueue[i]));
+        console.log(locationsDataQueue[i])
+        dataString+=JSON.stringify(locationsDataQueue[i])+"\n";
+    }
+    console.log(`Saved ${locationsDataQueue.length} LocationData related to ${numberOfSession} unique session inside ${fileName}`);
+    fs.writeFile(fileName, dataString, () => { });
+
+}
+sendData();
 
 console.log(`Saved ${locationsDataQueue.length} LocationData related to ${numberOfSession} unique session inside ${fileName}`);
 fs.writeFile(fileName, dataString, () => { });
