@@ -20,7 +20,7 @@ function KafkaClient(msg) {
             brokers: ['localhost:9092'],
         });
         const producer = kafka.producer();
-        yield sleep(3000);
+        yield sleep(30000);
         //your task after delay.
         yield producer.connect();
         yield producer.send({
