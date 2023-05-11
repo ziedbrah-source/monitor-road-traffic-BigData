@@ -11,12 +11,64 @@
       crossorigin=""></script>
     <!-- END LEAFLET -->
     <title>London Live Map</title>
+    <style>
+      /* Styles for the alert */
+      .alert {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+      }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    /* Styles for the left box */
+    .left-div {
+      width: 50%;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    /* Styles for the right box */
+    .right-div {
+      width: 50%;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    #pause_btn {
+            position: absolute;
+            top: 20px;
+            right: 45%;
+            padding: 10px;
+            z-index: 400;
+    }
+
+    #continu_btn {
+        position: absolute;
+        top: 20px;
+        right: 55%;
+        padding: 10px;
+        z-index: 400;
+    }
+
+    </style>
   </head>
   <body>
-    <h1>London Bus Live Map</h1>
-
+    <h1>Tunis trafic Live Map</h1>
+    <div class="container">
+      <div class="left-div">
+        <div  id="mapid" style = "width:100%; height:580px;"></div>
+        <button id="pause_btn" onclick="pause()"> pause</button>
+        <button id="continu_btn" onclick="continu()"> continu</button>
+      </div>
+      <div class="right-div" id="right">
+      </div>
+    </div>
     <!-- LEAFLET -->
-    <div id="mapid" style = "width:900px; height:580px;"></div>
+    
+    
     <script src="../static/leaf.js"></script>
     <!-- END LEAFLET -->
   </body>
