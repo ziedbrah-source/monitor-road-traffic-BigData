@@ -122,7 +122,7 @@ for (let i = 0; i < numberOfUpdates; i++) {
 const fileName: string = 'data.json';
 
 let dataString: string = '';
-for (let i = 0; i < locationsDataQueue.length; i++) {
+for (let i = 0; i < 2; i++) {
     KafkaClient(JSON.stringify(locationsDataQueue[i]));
     dataString+=JSON.stringify(locationsDataQueue[i])+"\n";
 }

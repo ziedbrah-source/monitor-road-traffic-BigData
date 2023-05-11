@@ -9,10 +9,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 public class Consumer {
     public static void main(String[] args) throws Exception {
-        // if(args.length == 0){
-        // System.out.println("topic name must be passed as a parameter");
-        // return;
-        // }
         String topicName = "sensorsData";
         Properties props = new Properties();
 
@@ -39,8 +35,10 @@ public class Consumer {
 
                     System.out.println(record.value());
 
-                    HDFSClient writer = new HDFSClient(new URI("hdfs://localhost:9000/"), "/user/root/sensors/sensorsData"+i+".txt");
-                    writer.write(record.value() );
+                    JSONObject json = new JSONObject(record.value());
+                    HDFSClient writer = new HDFSClient(new URI("hdfs://localhost:9000/"), "/user/root/res.txt");
+                    writer.write(json.getString("macAddress")+ " " + json.getString("alert") + " "+json.getString("speed"));
+                    writer.close();
 
                 } catch (Exception e) {
                     e.printStackTrace();
