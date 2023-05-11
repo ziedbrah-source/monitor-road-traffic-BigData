@@ -1,8 +1,28 @@
 import fs from 'fs';
 import { LocationData } from './LocationData';
 import _ from 'lodash'
-import {KafkaClient} from "./KafkaClient"
+import { KafkaClient } from "./KafkaClient"
+import { Feature, GeoJsonObject, Geometry, GeoJSON } from 'geojson';
+import { RoadFeature } from './RoadFeature';
+import { nodeGraph, getRandomItem, getCoordID, node, getLocationsGraph, getRoadsFeature, getDistanceInMeters } from './LocationUtils';
 
+// Load the OSM data from tunis-road.geojson
+
+const tunis_roads = fs.readFileSync('./tunis-road.geojson', 'utf-8');
+const geojson: GeoJSON.FeatureCollection = JSON.parse(tunis_roads);
+
+const roadFeatures: RoadFeature[] = getRoadsFeature(geojson.features);
+
+const locationGraph: nodeGraph = getLocationsGraph(roadFeatures);
+let allLocations: node[] = Object.values(locationGraph);
+let visitedLocationByMacAdress = {}
+let currentNodeIdByMacAdress = {}
+
+// let na = locationGraph[getCoordID([
+//     10.2142654,
+//     36.8474979
+// ])].neighbours;
+// console.log(getDistanceInMeters(locationGraph[na[0]].coord, locationGraph[na[1]].coord))
 
 let currentFictiveTimeStamp = Date.now();
 
@@ -67,32 +87,56 @@ function generateRandomLocationData(): LocationData {
     const data = new LocationData();
     currentFictiveTimeStamp += generateRandomNumber(1, 1000);
 
-    const coordinates = generateRandomCoordinates(0, 10, 0, 10);
-    data.lat=coordinates.lat.toString();
-    data.lng= coordinates.lng.toString();
+    const currCoordinates = getRandomItem(allLocations);
+    data.lat = currCoordinates.coord[0].toString();
+    data.lng = currCoordinates.coord[1].toString();
     data.macAddress = generateRandomMacAddress().toString();
     data.sessionId = generateSessionId().toString();
     data.session_start_timestamp = currentFictiveTimeStamp.toString();
     data.timestamp = currentFictiveTimeStamp.toString();
     data.devicebrand = getRandomDeviceBrand();
-    var number=generateRandomNumber(0, 160);
-   // console.log(number);
+    var number = generateRandomNumber(0, 160);
     data.speed = `${number} km/h`;
-    data.alert= number>100?"true":"false";
+    data.alert = number > 100 ? "true" : "false";
+    visitedLocationByMacAdress[data.macAddress] = new Set<string>([getCoordID(currCoordinates.coord)]);
+    currentNodeIdByMacAdress[data.macAddress] = getCoordID(currCoordinates.coord);
     return data;
+}
+
+function findFirstMissing(allKeys: string[], takenKeys: Set<string>) {
+    for (const element of allKeys) {
+        if (!takenKeys.has(element)) {
+            return element;
+        }
+    }
+    return null;
 }
 
 function moveLocationData(locationsData: LocationData): LocationData {
     const locationDataToMove: LocationData = _.cloneDeep(locationsData);
 
-    currentFictiveTimeStamp += generateRandomNumber(1, 1000);
+    currentFictiveTimeStamp += generateRandomNumber(1000, 3000);
     locationDataToMove.timestamp = currentFictiveTimeStamp.toString();
-    locationDataToMove.lat = (+locationDataToMove.lat +generateRandomDouble(-0.001, 0.001)).toString();
-    locationDataToMove.lng = (+locationDataToMove.lng+generateRandomDouble(-0.001, 0.001)).toString();
-    const arr=locationDataToMove.speed.split(" ");
+    let currentnode: node = locationGraph[currentNodeIdByMacAdress[locationsData.macAddress]];
+
+    let newCordKey = findFirstMissing(currentnode.neighbours, visitedLocationByMacAdress[data.macAddress]);
+
+    if (newCordKey === null) {
+        locationDataToMove.alert = "false";
+        locationDataToMove.speed = "0 km/h";
+        return locationDataToMove;
+    }
+
+    let newCord = locationGraph[newCordKey];
+    visitedLocationByMacAdress[locationsData.macAddress].add(newCordKey);
+
+    locationDataToMove.lat = newCord.coord[0].toString();
+    locationDataToMove.lng = newCord.coord[1].toString();
+    const arr = locationDataToMove.speed.split(" ");
     var speed=generateRandomNumber(Math.max(0,+arr[0]-40), Math.min(+arr[0]+40,160));
     locationDataToMove.alert= +arr[0]>100?"true":"false";
     locationDataToMove.speed=`${speed} km/h`;
+
     return locationDataToMove;
 };
 
@@ -122,7 +166,7 @@ for (let i = 0; i < numberOfUpdates; i++) {
 const fileName: string = 'data.json';
 
 let dataString: string = '';
-for (let i = 0; i < 2; i++) {
+for (let i = 0; i < locationsDataQueue.length; i++) {
     KafkaClient(JSON.stringify(locationsDataQueue[i]));
     dataString+=JSON.stringify(locationsDataQueue[i])+"\n";
 }
