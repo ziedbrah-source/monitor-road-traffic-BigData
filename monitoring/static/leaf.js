@@ -5,7 +5,7 @@ var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     });
     osm.addTo(map);
 
-var source = new EventSource('/topic/my-topic'); 
+var source = new EventSource('/topic/sensorsData'); 
 source.addEventListener('message', function(e){
 
   console.log('Message');
@@ -47,7 +47,7 @@ function displayPositions(){
   //     tunisCityMarker.bindPopup('<h2>Tunis</h2>');
   trackers.forEach((value, key) => {
   if(value){
-      const marker2 = L.marker([value.latitude,value.longitude], {
+      const marker2 = L.marker([value.lat,value.lng], {
           
           // icon: L.icon({
           // iconUrl: './car.png',
