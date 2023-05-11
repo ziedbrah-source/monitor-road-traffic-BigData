@@ -1,4 +1,4 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response , send_from_directory
 from pykafka import KafkaClient
 
 from pymongo import MongoClient
@@ -21,9 +21,9 @@ collection = db['sensors']
 #sensors = db.sensors
 
 
-@app.route('/statistics')
-def test():
-    start_date = datetime.now() -  timedelta(minutes= 5) # Replace with your desired start date
+@app.route('/statistics/<int:time>')
+def stats(time):
+    start_date = datetime.now() -  timedelta(minutes= time) # Replace with your desired start date
     end_date = datetime.now() # Replace with your desired end date
     # Define the query using the $gte and $lt operators
     #print(int(end_date.timestamp() * 1000))
@@ -34,25 +34,37 @@ def test():
     all_todos = collection.find()
     alerts_todos = collection.find(alertsQuery)
 
-    listt = list(all_todos)
-    print(listt)
+    #get the alerts
+    alerts = []
     for document in alerts_todos:
-         print(document)
+         #print(document)
          if(int(document["timestamp"])>int(start_date.timestamp() * 1000)):
             print(document)
-            
-    for document in all_todos:
-        #print(document)
-         if(int(document["timestamp"])>int(start_date.timestamp() * 1000)):
-            sped = document["speed"];
+            alerts.append(document)
 
-            print(document)
-    #print(all_todos)
-    return render_template('index2.html', todos=all_todos)
+    #average speed
+    total_speed = 0         
+    for document in all_todos:
+        if(int(document["timestamp"])>int(start_date.timestamp() * 1000)):
+             print(document)
+        speed = document["speed"]
+        print(speed)
+        speed_value = speed.replace(" km/h", "")
+        #print(speed)
+        total_speed += int(speed_value)
+    average = 0 ;    
+    if(len(alerts) != 0):
+        average = total_speed/(len(alerts))
+
+    return render_template('index2.html', todos=alerts , time=time , average = average ,nbr = len(alerts) )
 
 @app.route('/')
 def index():
     return(render_template('index.html'))
+
+@app.route('/report')
+def serve_text():
+    return send_from_directory('static', 'batchData.txt', mimetype='text/plain')
 
 #Consumer API
 @app.route('/topic/<topicname>')

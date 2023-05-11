@@ -1,50 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>FlaskApp</title>
-    <style>
-        .todo {
-            padding: 20px;
-            margin: 10px;
-            background-color: #eee;
-        }
-    </style>
+  <title>stats</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f1f1;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 20px;
+    }
+
+    li {
+      background-color: #fff;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .speed {
+      text-align: center;
+      font-size: 24px;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-    <h1>FlaskTODO</h1>
-    <hr>
-    <div class="content">
-    <form method="post">
-        <p>
-            <b><label for="content">Todo content</label></b>
-        </p>
-        <p>
-            <input type="text" name="content"
-                placeholder="Todo Content"></input>
-        </p>
-
-        <p>
-            <b><label for="degree">Degree</label></b>
-        </p>
-        <p>
-            <input id="degree-0" name="degree" required type="radio" value="Important">
-            <label for="degree-0">Important</label>
-        </p>
-        <p>
-            <input id="degree-1" name="degree" required type="radio" value="Unimportant">
-            <label for="degree-1">Unimportant</label>
-        </p>
-        <button type="submit">Submit</button>
-    </form>
-    <hr>
+  <h1>Alerts in the last {{ time }} minutes</h1>
+  <ul>
+    <li>you have {{nbr}} alerts in the last {{ time }} minutes</li>
     {% for todo in todos %}
-        <div class="todo">
-            <p>{{ todo['alert'] }} </p>
-            <p>zertyhjkdfghj</p>
-        </div>
+    <li> alert : the vehicule with id <b> {{ todo['sessionId'] }} </b> the speed limit with speed <b> {{ todo['speed'] }} </b></li>
     {% endfor %}
+  </ul>
+  <div class="speed">
+    Average Speed: <b>{{average}}</b> km/h
+  </div>
 
-    </div>
 </body>
 </html>
