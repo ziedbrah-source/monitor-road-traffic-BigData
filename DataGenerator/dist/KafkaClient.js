@@ -13,10 +13,15 @@ exports.KafkaClient = void 0;
 const { Kafka } = require('kafkajs');
 function KafkaClient(msg) {
     return __awaiter(this, void 0, void 0, function* () {
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
         const kafka = new Kafka({
             brokers: ['localhost:9092'],
         });
         const producer = kafka.producer();
+        yield sleep(3000);
+        //your task after delay.
         yield producer.connect();
         yield producer.send({
             topic: 'sensorsData',

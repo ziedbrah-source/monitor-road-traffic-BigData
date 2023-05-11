@@ -9,12 +9,19 @@ import scala.Tuple2;
 
 public class Monitor {
 
-    static String[] warnWords = { "[WARN]", "warning", "WAR", "<war>" };
-    static String[] infoWords = { "[INFO]", "info", "INFO", "information", "<info>" };
-    static String[] errorWords = { "[ERROR]", "error:", "Error", "*ERROR*", "failed", "failure" };
+    static String[] Words = {"Apple",
+            "Samsung",
+            "Xiaomi",
+            "Huawei",
+            "Oppo",
+            "OnePlus",
+            "Motorola",
+            "Sony",
+            "LG",
+            "Nokia"};
 
     public static void main(String[] args) {
-        new Monitor().run("hdfs://localhost:9000/user/root/target-logs/logs.txt", "hdfs://localhost:9000/outbatch");
+        new Monitor().run("hdfs://localhost:9000/user/root/res.txt", "hdfs://localhost:9000/user/root/outbatch");
     }
 
     public void run(String inputFilePath, String outputDir) {
@@ -22,28 +29,18 @@ public class Monitor {
         JavaSparkContext sc = new JavaSparkContext(conf);
 
         JavaRDD<String> logs = sc.textFile(inputFilePath);
-        JavaPairRDD<String, Integer> statistics = logs.flatMap(e -> Arrays.asList(e.split(", ")).iterator())
+        JavaPairRDD<String, Integer> statistics = logs.flatMap(e -> Arrays.asList(e.split(" , ")).iterator())
                 .mapToPair(message -> {
                     String[] words = message.split(" ");
+                    String disp="";
                     int numberOfWarnings = 0;
-                    int numberOfInfos = 0;
-                    int numberOfErrors = 0;
                     for (String word : words) {
-                        if (ArrayUtils.contains(warnWords, word)) {
-                            numberOfWarnings++;
-                        } else if (ArrayUtils.contains(errorWords, word)) {
-                            numberOfErrors++;
-                        } else if (ArrayUtils.contains(infoWords, word)) {
-                            numberOfInfos++;
+                        if (ArrayUtils.contains(Words, word)) {
+                            disp=word;
                         }
                     }
-                    int max = Math.max(Math.max(numberOfErrors, numberOfInfos), numberOfWarnings);
-                    if (numberOfErrors == max)
-                        return new Tuple2<>("ERROR", 1);
-                    else if (numberOfInfos == max)
-                        return new Tuple2<>("INFO", 1);
-                    else
-                        return new Tuple2<>("WARN", 1);
+                    return new Tuple2<>(disp, 1);
+
                 }).reduceByKey(Integer::sum);
 
         statistics.saveAsTextFile(outputDir);
