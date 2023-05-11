@@ -5,11 +5,7 @@ import java.util.*;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import jdk.nashorn.internal.parser.JSONParser;
-import org.apache.hadoop.shaded.net.minidev.json.JSONObject;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.spark.streaming.api.java.JavaDStream;
-import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.apache.spark.streaming.api.java.JavaPairReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka.KafkaUtils;
