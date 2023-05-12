@@ -41,7 +41,7 @@ The Road Monitoring System follows the following flow:
 
 8. The monitoring server made with Flask pulls the cleaned data from the "cleanData" topic in Kafka, enabling real-time monitoring of vehicle locations and movements on a map. It visualizes the vehicles' real-time positions, tracks their movements, and alerts users in case of any anomalies or specific events.
 
-9. The monitoring server also queries MongoDB for real-time data analytics. It fetches and displays additional information such as average alerts and average speed over the past X minutes (you choose X). This information enhances the monitoring capabilities and provides a comprehensive view of the road conditions.
+9. The monitoring server also queries MongoDB for real-time data analytics. It fetches and displays additional information such as average alerts and average speed over the past X minutes (you choose X). This information enhances the monitoring capabilities and provides a comprehensive view of the driver/car conditions.
 
 
 ## ARCHITECTURE
