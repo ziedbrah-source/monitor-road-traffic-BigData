@@ -13,13 +13,12 @@ The Road Monitoring System is a software application developed for real-time mon
 ## Technologies Used
 
 - Kafka
-- HDFS (HADOOP FILE SYSTEM)
+- HDFS ( HADOOP FILE SYSTEM )
 - Flask
 - MongoDB
 - Spark
-- Node.js
+- Node.js( TypeScript )
 - Java
-- React
 
 ## Flow Description
 
